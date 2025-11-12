@@ -1,42 +1,114 @@
-# Genetic Algorithm optimised Trading Strategy.
+# Genetic Algorithm Optimized Trading Strategy
 
-Genetic algorithms (GAs) represent a class of optimisation algorithms inspired by the process of natural selection and genetics. Originating from the field of evolutionary computation, GAs have gained prominence in solving complex optimisation and search problems across various domains, equity and cryptocurrency trading being one of them. In this research, we look at one such strategy commonly applied in trading algorithms and try to put genetic algorithms to optimise our parameters.
+This repository explores the application of Genetic Algorithms (GAs) to optimize parameters for a combined Bollinger Bands and Relative Strength Index (RSI) trading strategy. Inspired by natural selection, GAs are powerful optimisation and search techniques well-suited for tuning complex, non-linear problems like trading strategy parameter selection in equity and cryptocurrency markets.
 
-A trading strategy based on Bollinger Bands and the Relative Strength Index (RSI) combines two popular technical indicators to make trading decisions. Here's an explanation of the potential results and considerations when using such a strategy:
+## Strategy Components
+The trading strategy is built upon the confluence of two widely-used technical indicators: Bollinger Bands and the Relative Strength Index (RSI).
 
-## Bollinger Bands:
-Bollinger Bands consist of a middle band, which is usually a simple moving average (SMA), and two outer bands that are standard deviations away from the middle band. They are used to identify volatility and potential reversal points in the price of a financial instrument.
-When the price is near the upper band, it may be considered overbought, suggesting a potential reversal or pullback. Conversely, when the price is near the lower band, it may be considered oversold, indicating a potential upward reversal.
+### 1. Bollinger Bands
 
-## Relative Strength Index (RSI):
-RSI is a momentum oscillator that measures the speed and change of price movements. It ranges from 0 to 100 and is typically used to identify overbought or oversold conditions.
-RSI values above 70 are often interpreted as indicating overbought conditions, suggesting a potential reversal to the downside. RSI values below 30 are considered oversold, signaling a potential reversal to the upside.
+Bollinger Bands consist of three lines:
 
-## Combined Strategy:
-Traders using a strategy based on both Bollinger Bands and RSI may look for confluence or confirmation signals. For example:
-A sell signal could be generated when the price is near the upper Bollinger Band, indicating potential overbought conditions, and the RSI is above 70.
-A buy signal could be generated when the price is near the lower Bollinger Band, suggesting potential oversold conditions, and the RSI is below 30.
+- A **Middle Band** (typically a Simple Moving Average - SMA).
 
-## Potential Results:
-The results of using a Bollinger Bands and RSI-based strategy can vary based on market conditions, the timeframe used, and the specific parameters chosen for the indicators.
-Positive outcomes may include successfully identifying trend reversals and capturing profitable trades during periods of overbought or oversold conditions.
-Challenges may arise in ranging markets where price movements are less pronounced, leading to false signals or whipsaws.
+- An **Upper Band** (a specified number of standard deviations above the middle band).
 
-## Considerations:
-Like any trading strategy, it's essential to conduct thorough backtesting to evaluate the historical performance of the strategy under various market conditions.
-Traders should consider transaction costs, slippage, and other practical aspects of trading that can impact the actual results compared to theoretical ones.
-Regularly reassess and potentially adjust strategy parameters based on changing market conditions.
-It's crucial to note that no trading strategy guarantees success, and all trading involves risk. Traders should exercise caution, use risk management techniques, and consider the limitations and potential drawbacks of any technical analysis-based strategy. Additionally, strategies should be adapted to individual preferences, risk tolerance, and market conditions.
+- A **Lower Band** (a specified number of standard deviations below the middle band).
 
-The genetic algorithm that I have designed for optimising this particular strategy considers an individual with 5 genes :
-- The length of the RSI calculation period,
-- The length of the Bollinger Bands calculation period,
-- The RSI overbought level,
-- The RSI underbought level, and
-- The exit point.
+They are used to measure volatility and identify potential reversal points. Price movements near the upper band suggest an overbought condition, while movements near the lower band suggest an oversold condition.
 
-The algorithm first generates a population set of individuals generated by taking random values from a range we provide the algorithm.
+![unnamed-4](https://github.com/user-attachments/assets/22b03ddb-bce7-4614-825d-1b5baec69127)
 
-The fitness function backtests it against historical values fetched from Binance APIs.
+### 2. Relative Strength Index (RSI)
 
-After mutating and applying crossover mating algorithms over a predefined number of generations it generates a list of individuals which can be used with the strategy.
+RSI is a momentum oscillator that measures the speed and change of price movements, ranging from 0 to 100.
+
+- RSI values **above 70** are typically interpreted as overbought, signalling a potential reversal to the downside.
+
+- RSI values **below 30** are considered oversold, signalling a potential reversal to the upside.
+
+![unnamed](https://github.com/user-attachments/assets/f8c640fa-ceb7-41bc-acee-015a9b5d32cc)
+
+### Combined Strategy Logic
+
+The strategy uses these indicators for confirmation, aiming for higher-conviction entry points:
+
+- **Sell Signal**: Generated when the price is near the Upper Bollinger Band and the RSI is above the Overbought Level (e.g., 70).
+
+- **Buy Signal**: Generated when the price is near the Lower Bollinger Band and the RSI is below the Oversold Level (e.g., 30).
+
+![unnamed-2](https://github.com/user-attachments/assets/7d1b3aa1-e928-4757-b771-80d7b929c837)
+
+## Optimisation with Genetic Algorithms
+
+The core of this project is the use of a Genetic Algorithm to find the most profitable combination of parameters for the trading strategy. The algorithm is designed to backtest against historical data fetched from Binance APIs, using a fitness function to evaluate the performance of each parameter set.
+
+The GA defines an individual (a complete strategy) by 5 genes:
+
+1. **RSI Calculation Period Length**: (e.g., 14 periods)
+2. **Bollinger Bands Calculation Period Length**: (e.g., 20 periods)
+3. **RSI Overbought Level**: (e.g., 70)
+4. **RSI Oversold Level**: (e.g., 30)
+5. **Exit Point**: (A mechanism, such as a percentage stop-loss/take-profit, to close the trade).
+
+After numerous generations of mutation and crossover, the algorithm yields a list of optimized parameter sets that exhibit the best historical performance.
+
+## How to Run This Project
+
+To get this project running locally and begin the optimization process, follow these steps:
+
+1. **Clone the Repository**:
+
+```
+git clone https://github.com/saurabhdhingra/geneticAlgoTrading.git
+cd geneticAlgoTrading
+```
+
+2. **Set Up Environment (Recommended)**: Use a virtual environment to manage dependencies.
+
+```
+python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+```
+
+3. **Install Dependencies**: Install the required Python packages (e.g., 'pandas', 'numpy', 'backtrader', 'ccxt', 'deap', etc.).
+
+```
+pip install -r requirements.txt
+```
+
+4. **Configure Binance API Keys**: The project requires access to historical market data via Binance. You must set up your API Key and Secret in the appropriate configuration file (likely a config.py or by using environment variables). Check the repository for specific instructions on key placement.
+
+5. **Run the Optimization Script**: Execute the main script to start the Genetic Algorithm optimization process.
+
+```
+python main.py
+```
+
+The script will print the results of the backtesting for the best-performing individuals (parameter sets) found after the last generation.
+
+## Tweaking Initial Population Parameters
+
+The effectiveness of the Genetic Algorithm heavily depends on the initial search space defined by the parameter ranges. The GA's first step is to generate a random starting population of strategies by selecting values for the 5 genes within pre-defined bounds.
+
+To adjust the search space, you must edit the section of the code (likely in 'main.py' or a dedicated configuration file like 'config.py') where the bounds for random value generation are set.
+
+Here is an example of the typical ranges used for the 5 genes:
+
+```
+Gene (Parameter)	        Typical Use	                    Recommended Search Range
+
+RSI Period Length	        Sensitivity to price changes	10 to 30 (Integers)
+BB Period Length	        Length of the moving average	10 to 30 (Integers)
+RSI Overbought Level	    Threshold for selling signal	60 to 80 (Floats/Integers)
+RSI Oversold Level          Threshold for buying signal	    20 to 40 (Floats/Integers)
+Exit Point	                Profit-taking / Stop-loss %	    0.005 to 0.05 (0.5% to 5.0%)
+```
+
+To modify the search space:
+
+- **Wider Range**: Use a wider range (e.g., RSI Period: 7 to 40) to explore more possibilities, but this will increase the time needed for the GA to converge.
+
+- **Narrower Range**: Use a narrower range (e.g., RSI Period: 12 to 16) if you already have an idea of the optimal values, speeding up the process.
+
+**Note**: Always ensure the data types and bounds (e.g., integer vs. float, minimum/maximum values) match the requirements of your backtesting engine. Experimenting with these ranges is key to finding a globally optimal solution.
